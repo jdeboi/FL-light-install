@@ -1,0 +1,3 @@
+# FL-light-install
+
+Program to control DMX lights with the Madrix LUNA controller. 8 universes, RGB LEDs...
