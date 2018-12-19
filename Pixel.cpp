@@ -18,7 +18,12 @@ Pixel::Pixel(vector<ofPoint> p){
 }
 
 void Pixel::draw(ofColor c){
-    ofSetColor(c);
+	ofColor s = ofColor(c.r, c.g, c.b);
+	int br = 0;
+	if (s.getBrightness() == 0) br = 0;
+	else s.setBrightness(ofMap(c.getBrightness(), 0, 255, 80, 255));
+	//s = ofColor::fromHsb(s.getHue(), s.getSaturation(), br);
+    ofSetColor(s);
 	this->c = c;
     for (int i = 0; i < diodes.size(); i++) {
         ofPoint vert = diodes[i];

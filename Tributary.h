@@ -65,8 +65,10 @@ public:
 	int offset;
     ofColor getWrapGradient(int ind, int totalInd, int num, ofColor gradients[]);
     void pulseGradient(int num, ofColor prevGradients[], ofColor gradients[]);
+	void pulseGradient(int num, float speed, ofColor prevGradients[], ofColor gradients[]);
 	void setGradientTransition();
 	void updateGradientPulse();
+	void updateGradientPulse(float speed);
 	ofColor getTransitionGradient(int ind, int num, ofColor gradients[], ofColor prevGradients[]);
 
     Tributary();

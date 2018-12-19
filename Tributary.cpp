@@ -17,7 +17,7 @@ Tributary::Tributary(int i, int k, ofPolyline p, float numInStrip, int dir){
     repeat = 50;
     speed = 5;
     packetSize = 40;
-    pulseIndex = 0;
+    pulseIndex = int(ofRandom(200) + 1);
     group = 0;
     setup(p, numInStrip);
     lastChecked = ofGetElapsedTimeMillis();
@@ -48,6 +48,7 @@ void Tributary::setup(ofPolyline p, float numInStrip) {
         Pixel p = Pixel(diodes);
         pixels.push_back(p);
     }
+	//pulseIndex = (int)(ofRandom(pixels.size()));
     
     //////////////
     
@@ -70,7 +71,7 @@ void Tributary::setGroup(int g) {
 void Tributary::setRandomPacket(int ps, int separation){
     repeat = packetSize+separation;
     packetSize = ps;
-    pulseIndex = int(ofRandom(repeat)+1);
+   // pulseIndex = int(ofRandom(repeat)+1);
 }
 
 void Tributary::update(){
@@ -87,8 +88,10 @@ void Tributary::updatePacket(){
     
 //    pulseIndex++;
 //    if (pulseIndex > pixels.size()) pulseIndex = -pixels.size();
-    
-}
+	//if (pulseIndex > pixels.size()) {
+		//if (pulseIndex = 0;
+	//}
+} 
 
 void Tributary::updatePacket(int speed){
     if (ofGetElapsedTimeMillis() - counter > speed) {
@@ -100,25 +103,30 @@ void Tributary::updatePacket(int speed){
     
     //    pulseIndex++;
     //    if (pulseIndex > pixels.size()) pulseIndex = -pixels.size();
-    
+	if (pulseIndex > pixels.size()) {
+		//if ((int)(ofRandom(100))==0) pulseIndex = 0;
+	}
 }
 
 
 void Tributary::draw(){
     for( int j = 0; j < pixels.size(); j++ ) {
-        pixels[j].draw(ofColor::fromHsb(255*(id*1.0/42), 255*(j*1.0/pixels.size()), 255));
+		//if (id < 16 || id > 19) 
+		pixels[j].draw(ofColor::fromHsb(255*(id*1.0/42), 255*(j*1.0/pixels.size()), 255));
     }
 }
 
 void Tributary::draw(ofColor c){
     for( int j = 0; j < pixels.size(); j++ ) {
-        pixels[j].draw(c);
+		//if (id < 16 || id > 19) 
+			pixels[j].draw(c);
     }
 }
 
 void Tributary::drawGradient(ofColor start, ofColor end) {
     for (int j = 0; j < pixels.size(); j++) {
-        pixels[j].draw(start.lerp(end, j*1.0/pixels.size()));
+		//if (id < 16 || id > 19) 
+		pixels[j].draw(start.lerp(end, j*1.0/pixels.size()));
     }
 }
 
@@ -130,17 +138,36 @@ void Tributary::setGradientTransition() {
 }
 
 void Tributary::updateGradientPulse() {
-    offset+=direction;
-    if (offset < 0) offset = pixels.size() -1;
+	if (ofGetElapsedTimeMillis() - counter > speed) {
+		counter = ofGetElapsedTimeMillis();
+		offset += direction;
+		if (offset < 0) offset = pixels.size() - 1;
+	}
+}
+
+void Tributary::updateGradientPulse(float sp) {
+	if (ofGetElapsedTimeMillis() - counter > sp) {
+		counter = ofGetElapsedTimeMillis();
+		offset += direction;
+		if (offset < 0) offset = pixels.size() - 1;
+	}
 }
 
 void Tributary::pulseGradient(int num, ofColor prevGradients[], ofColor gradients[]) {
     updateGradientPulse();
     for (int j = 0; j < pixels.size(); j++) {
-        pixels[j].draw(getWrapGradient(j - (offset%pixels.size()), pixels.size(), num, gradients));
+		//if (id < 16 || id > 19) 
+		pixels[j].draw(getWrapGradient(j - (offset%pixels.size()), pixels.size(), num, gradients));
     }
 }
 
+void Tributary::pulseGradient(int num, float speed, ofColor prevGradients[], ofColor gradients[]) {
+	updateGradientPulse(speed);
+	for (int j = 0; j < pixels.size(); j++) {
+		// if (id < 16 || id > 19) 
+		pixels[j].draw(getWrapGradient(j - (offset%pixels.size()), pixels.size(), num, gradients));
+	}
+}
 
 
 ofColor Tributary::getWrapGradient(int ind, int totalInd, int num, ofColor gradients[]) {
@@ -178,38 +205,45 @@ ofColor Tributary::getTransitionGradient(int ind, int num,  ofColor prevGradient
 void Tributary::drawPacket(ofColor gradients[]){
     ofColor c;
     for( int j = 0; j < pixels.size(); j++ ) {
-        if (inPulse(j)) c = getPacketGradientColor(j, gradients);
-        else c = ofColor(255, 0, 0); //ofColor(ofColor::fromHsb(255*(id*1.0/42), 255*(j*1.0/pixels.size()), 255));
-        pixels[j].draw(c);
+		//if (id < 16 || id > 19) {
+			if (inPulse(j)) c = getPacketGradientColor(j, gradients);
+			else c = ofColor(255, 0, 0); //ofColor(ofColor::fromHsb(255*(id*1.0/42), 255*(j*1.0/pixels.size()), 255));
+			pixels[j].draw(c);
+		//}
     }
 }
 
 ofColor Tributary::getPacketGradientColor(int j, ofColor gradients[]) {
+	if (pulseIndex > pixels.size()) {
+		//return 0;
+	}
     int n = (j-pulseIndex)%repeat;
     return getWrapGradient(n, packetSize, 4, gradients) ;
 }
 
 bool Tributary::inPulse(int j) {
-//    int n = (j-pulseIndex)%repeat;
-//    return (n >= 0 && n < packetSize);
-    return true;
+    //int n = (j-pulseIndex)%repeat;
+    //return (n >= 0 && n < packetSize);
+   return true;
 }
 
 
 
 void Tributary::drawGroup() {
     for (int j = 0; j < pixels.size(); j++) {
-        pixels[j].draw(ofColor::fromHsb((group*10) % 255, 255, 255));
+		//if (id < 16 || id > 19) 
+		pixels[j].draw(ofColor::fromHsb((group*10) % 255, 255, 255));
     }
 }
 
 
 void Tributary::drawLabel() {
-    drawLabel(pixels[pixels.size()-1].diodes[0]);
+	// if (id < 16 || id > 19) 
+	drawLabel(pixels[pixels.size()-1].diodes[0]);
 }
 
 void Tributary::drawLabel(ofPoint vert) {
-    ofSetColor(0);
+	ofSetColor(255);
     // ofDrawBitmapString(originalOrder, vert);
     ofDrawBitmapString(id + 1, vert);
     

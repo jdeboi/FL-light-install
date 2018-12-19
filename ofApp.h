@@ -5,8 +5,15 @@
 #include "ofxArtnet.h"
 #include "Tributary.h"
 #include "ofxGui.h"
-//#include "ofxButtons.h"
+#include "ofxButtons.h"
 
+#define OFF 11
+#define DEFAULT 0
+#define WHITE	1
+#define SOLID	2
+#define CUSTOM_GRADIENT 3
+#define RAINBOW 4
+#define RAINBOW_SOLID 5
 
 class ofApp : public ofBaseApp{
 
@@ -15,6 +22,7 @@ class ofApp : public ofBaseApp{
 		// built-in to openframeworks
 		void setup();
 		void update();
+		void exit();
 		void draw();
 		void keyPressed(int key);
 		void keyReleased(int key);
@@ -28,12 +36,7 @@ class ofApp : public ofBaseApp{
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
 
-		// kinect
-//        ofxKFW2::Device kinect;
-//        void setupKinect();
-//        void drawKinect();
-//        void updateSkeleton();
-		void playShow();
+
 
 		// simulation
 		void setupSimulation();
@@ -47,12 +50,7 @@ class ofApp : public ofBaseApp{
 		int pulseTime;
 		int numTracked;
 		ofColor gradientColors[9];
-		ofColor glitchColors[9];
 
-		void drawGlitch(int x, int y, int r, bool change);
-		void glitchOut();
-		bool changeGlitch;
-		uint64_t lastCheckedGlitch;
 
 		// SVG
 		ofxSVG svg;
@@ -67,23 +65,40 @@ class ofApp : public ofBaseApp{
 		void setDMXTributaries();
 
 		// button
-		/*ButtonManager buttons;
+		ButtonManager buttons;
 		void initButtons();
-		bool bReset;*/
+		bool bReset;
 		int numSelect;
 		int modeSelect;
 		void setMode();
 		void changeMode();
 		float modeTime;
 		int modeDuration;
+		bool off;
+
+		ofxPanel gui;
+		ofxToggle offLights;
+
 
 		// colors
 		float storedColors[9][3];
-		float storedGlitchColors[4][3];
+		float storedDefaultColors[4][3];
+		float storedGradientColors[4][3];
+		float storedBrightness[4];
+		float storedSolid[3];
+
 		void initColors();
 		void setStoredColors();
 		void setGradientColors();
         void setBrightnessColors(int trib);
+		void setBrightnessSections();
+		void setGradientListColors();
+		void initSettings();
+		void setModeColors();
+
+		void drawRainbow();
+		void drawRainbowGradient();
+		void drawSolid();
 
 		// transitioning
 		bool transitioning;
@@ -97,13 +112,12 @@ class ofApp : public ofBaseApp{
         void drawGradientFlow();
         void drawPacket();
         void drawLabels();
+		void setDefaultColors();
+		void drawSolid(int r, int g, int b);
+		void drawSolid(ofColor c);
     
-    // gui
-    ofxPanel gui;
-    ofxIntSlider brightnessSlider1;
-    ofxIntSlider brightnessSlider2;
-    ofxIntSlider brightnessSlider3;
-    ofxIntSlider brightnessSlider4;
-    ofxIntSlider speedSlider;
-
+   
+		float speedVal;
+		int lightsMode = 0;
+	
 };
